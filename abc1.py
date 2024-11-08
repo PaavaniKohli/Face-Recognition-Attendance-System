@@ -24,7 +24,7 @@ def findEncodings(images):
   return encodeList
 
 def markAttendance(name):
-  with open('C:/Users/123/Desktop/face/Attendance.csv','r+') as f:
+  with open('C:/Users/123/Desktop/face/Face-Recognition-Attendance-System/Attendance.csv','r+') as f:
     myDataList = f.readlines()
     nameList = []
     for line in myDataList:
@@ -48,8 +48,11 @@ while True:
   if not success:
     break
 
-  facesCurFrame = face_recognition.face_locations(img)
-  encodesCurFrame = face_recognition.face_encodings(img,facesCurFrame)
+  imgS = cv2.resize(img, (0, 0), None, 0.25, 0.25)
+  imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
+
+  facesCurFrame = face_recognition.face_locations(imgS)
+  encodesCurFrame = face_recognition.face_encodings(imgS ,facesCurFrame)
 
   for encodeFace,faceLoc in zip(encodesCurFrame,facesCurFrame):
     matches = face_recognition.compare_faces(encodeListKnown,encodeFace)
@@ -68,5 +71,6 @@ while True:
       markAttendance(name)
       
   cv2.imshow('Webcam',img)
-  cv2.waitKey(1)
-  break
+  
+  if cv2.waitKey(1) & 0xFF == ord('q'):
+    break
